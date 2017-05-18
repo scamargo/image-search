@@ -13,6 +13,10 @@ app.get('/api/imagesearch/:searchterm', function(req,res){
     if (!searchTerm) {
         searchTerm = ""
     }
+    var offset = req.query.offset
+    if (!offset) {
+        offset = ""
+    }
     var currentTime = new Date();
     var doc = {term : searchTerm, when : currentTime}
     
@@ -20,14 +24,28 @@ app.get('/api/imagesearch/:searchterm', function(req,res){
     
     // Insert query info
     mongo.connect(dbUrl, function(err, db) {
-      if(err) throw err;
+      if(err) throw err
 
-      var urls = db.collection('queries');
-      urls.insert(doc, function(err, data) {
+      var queries = db.collection('queries');
+      queries.insert(doc, function(err, data) {
           if(err) throw err
           db.close()
           res.send(data.ops[0])
       })
+    })
+})
+
+app.get('/api/latest/imagesearch', function(req,res){
+    mongo.connect(dbUrl, function(err, db) {
+        if(err) throw err
+        var queries = db.collection('queries')
+        
+        queries.find().toArray(function(err,documents){
+            if(err) throw err
+            db.close()
+            console.log(documents)
+            res.send(documents)
+        })
     })
 })
 
