@@ -7,6 +7,8 @@ var app = express()
 
 var port = process.env.PORT || 8080;
 
+//TODO: enable empty searchterm
+//TODO: add pagination functionality
 app.get('/api/imagesearch/:searchterm', function(req,res){
 
     var searchTerm = req.params["searchterm"]
@@ -29,8 +31,14 @@ app.get('/api/imagesearch/:searchterm', function(req,res){
       var queries = db.collection('queries');
       queries.insert(doc, function(err, data) {
           if(err) throw err
-          db.close()
-          res.send(data.ops[0])
+          
+          var images = db.collection('images');
+          //TODO: add search term to query
+          images.find().toArray(function(err, data) {
+            if(err) throw err
+            db.close()
+            res.send(data)
+          })
       })
     })
 })
@@ -45,6 +53,25 @@ app.get('/api/latest/imagesearch', function(req,res){
             db.close()
             console.log(documents)
             res.send(documents)
+        })
+    })
+})
+
+app.get('/api/latest/addimage', function(req,res){
+    var imageUrl = req.query.url
+    var imageSnippet = req.query.snippet
+    if(!imageUrl || !imageSnippet)
+        return res.send('Invalid request')
+    
+    mongo.connect(dbUrl, function(err, db) {
+        if(err) throw err
+        var doc = {url: imageUrl,snippet: imageSnippet}
+        
+        var images = db.collection('images');
+        images.insert(doc, function(err, data) {
+            if(err) throw err
+            db.close()
+            res.send(data.ops[0])
         })
     })
 })
