@@ -7,8 +7,6 @@ var app = express()
 
 var port = process.env.PORT || 8080;
 
-//TODO: enable empty searchterm
-//TODO: add pagination functionality
 app.get('/api/imagesearch/*', function(req,res){
 
     var searchTerm = req.params[0]
@@ -16,10 +14,13 @@ app.get('/api/imagesearch/*', function(req,res){
         searchTerm = ""
     }
     console.log("searchTerm: "+ searchTerm)
-    var offset = req.query.offset
-    if (!offset) {
-        offset = ""
+    
+    var pageLimit = 1
+    var offset = Number(req.query.offset)
+    if (!offset || isNaN(offset)) {
+        offset = 0
     }
+    
     var currentTime = new Date();
     var doc = {term : searchTerm, when : currentTime}
     
@@ -33,7 +34,8 @@ app.get('/api/imagesearch/*', function(req,res){
           
           var images = db.collection('images');
           var regex = new RegExp(searchTerm,"i");
-          images.find({'snippet': {$regex : regex} }).toArray(function(err, data) {
+          images.find({'snippet': {$regex : regex} }).skip(offset)
+          .limit(pageLimit).toArray(function(err, data) {
             if(err) throw err
             db.close()
             res.send(data)
