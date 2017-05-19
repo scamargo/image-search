@@ -1,11 +1,13 @@
 // TODO: Add async plugin to waterfall async calls
-
+var path = require('path')
 var mongo = require('mongodb').MongoClient
 var dbUrl = process.env.IMAGE_SEARCH_DB_URI;
 var express = require("express")
 var app = express()
 
 var port = process.env.PORT || 8080;
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/imagesearch/*', function(req,res){
 
