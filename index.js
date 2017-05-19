@@ -17,7 +17,7 @@ app.get('/api/imagesearch/*', function(req,res){
     }
     console.log("searchTerm: "+ searchTerm)
     
-    var pageLimit = 1
+    var pageLimit = 10
     var offset = Number(req.query.offset)
     if (!offset || isNaN(offset)) {
         offset = 0
@@ -29,7 +29,7 @@ app.get('/api/imagesearch/*', function(req,res){
     // Insert query info
     mongo.connect(dbUrl, function(err, db) {
       if(err) throw err
-
+      
       var queries = db.collection('queries');
       queries.insert(doc, function(err, data) {
           if(err) throw err
@@ -47,11 +47,13 @@ app.get('/api/imagesearch/*', function(req,res){
 })
 
 app.get('/api/latest/imagesearch', function(req,res){
+    
     mongo.connect(dbUrl, function(err, db) {
         if(err) throw err
         var queries = db.collection('queries')
+        var pageLimit = 10
         
-        queries.find().sort({'when':-1}).toArray(function(err,documents){
+        queries.find().limit(pageLimit).sort({'when':-1}).toArray(function(err,documents){
             if(err) throw err
             db.close()
             res.send(documents)
@@ -59,7 +61,7 @@ app.get('/api/latest/imagesearch', function(req,res){
     })
 })
 
-app.get('/api/latest/addimage', function(req,res){
+app.get('/api/addimage', function(req,res){
     var imageUrl = req.query.url
     var imageSnippet = req.query.snippet
     if(!imageUrl || !imageSnippet)
