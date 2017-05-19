@@ -49,10 +49,9 @@ app.get('/api/latest/imagesearch', function(req,res){
         if(err) throw err
         var queries = db.collection('queries')
         
-        queries.find().toArray(function(err,documents){
+        queries.find().sort({'when':-1}).toArray(function(err,documents){
             if(err) throw err
             db.close()
-            console.log(documents)
             res.send(documents)
         })
     })
