@@ -9,20 +9,19 @@ var port = process.env.PORT || 8080;
 
 //TODO: enable empty searchterm
 //TODO: add pagination functionality
-app.get('/api/imagesearch/:searchterm', function(req,res){
+app.get('/api/imagesearch/*', function(req,res){
 
-    var searchTerm = req.params["searchterm"]
+    var searchTerm = req.params[0]
     if (!searchTerm) {
         searchTerm = ""
     }
+    console.log("searchTerm: "+ searchTerm)
     var offset = req.query.offset
     if (!offset) {
         offset = ""
     }
     var currentTime = new Date();
     var doc = {term : searchTerm, when : currentTime}
-    
-    // TODO: GET & DISPLAY ALL RELEVANT SEARCH RESULTS
     
     // Insert query info
     mongo.connect(dbUrl, function(err, db) {
@@ -33,8 +32,8 @@ app.get('/api/imagesearch/:searchterm', function(req,res){
           if(err) throw err
           
           var images = db.collection('images');
-          //TODO: add search term to query
-          images.find().toArray(function(err, data) {
+          var regex = new RegExp(searchTerm,"i");
+          images.find({'snippet': {$regex : regex} }).toArray(function(err, data) {
             if(err) throw err
             db.close()
             res.send(data)
