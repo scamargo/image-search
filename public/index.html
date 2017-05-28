@@ -3,21 +3,23 @@
 <head>
   <title>Image Search Abstraction Layer</title>
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="js/controller.js"></script>
 </head>
 <body>
     <h1>Image Search Abstraction Layer</h1>
     <br>
     <div class="container">
         <h2>Example Image Search:</h2>
-        <p class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/</p>
+        <p id='imagesearch-blank' class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/</p>
         <h2>Example Image Search (with search string):</h2>
-        <p class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/homework</p>
+        <p id='imagesearch-withquery' class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/professor</p>
         <h2>Example Image Search (with offset):</h2>
-        <p class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/?offset=1</p>
+        <p id='imagesearch-offset' class="example">https://img-ab-layer.herokuapp.com/api/imagesearch/?offset=1</p>
         <h2>Example Get Latest Image Searches:</h2>
-        <p class="example">https://img-ab-layer.herokuapp.com/api/latest/imagesearch</p>
+        <p id='latest-searches' class="example">https://img-ab-layer.herokuapp.com/api/latest/imagesearch</p>
         <h2>Example Add Image:</h2>
-        <p class="example">https://img-ab-layer.herokuapp.com/api/addimage?url=https://fanart.tv/fanart/movies/9678/moviethumb/little-nicky-566a799b37cf0.jpg&snippet=Little Nicky | Movie fanart</p>
+        <p id='addimage' class="example">https://img-ab-layer.herokuapp.com/api/addimage?url=https://fanart.tv/fanart/movies/9678/moviethumb/little-nicky-566a799b37cf0.jpg&snippet=Little Nicky | Movie fanart</p>
         <br><br>
         <a href="https://github.com/scamargo/image-search">Github Repo</a>
     </div>

@@ -1,13 +1,24 @@
-// TODO: Add async plugin to waterfall async calls
+// TODO: Add async plugin to waterfall async calls -- update: you can also use express 'next()''
+
 var path = require('path')
 var mongo = require('mongodb').MongoClient
-var dbUrl = process.env.IMAGE_SEARCH_DB_URI;
 var express = require("express")
+
+// environment config
+var dotenv = require('dotenv').config()
+//var dbUrl = process.env.IMAGE_SEARCH_DB_URI
+var dbUrl = process.env.MONGO_URI
+console.log(dbUrl)
+
 var app = express()
 
 var port = process.env.PORT || 8080;
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/jquery/jquery.js', function(req, res) {
+    res.sendFile(__dirname + '/node_modules/jquery/dist/jquery.min.js');
+});
 
 app.get('/api/imagesearch/*', function(req,res){
 
@@ -15,7 +26,6 @@ app.get('/api/imagesearch/*', function(req,res){
     if (!searchTerm) {
         searchTerm = ""
     }
-    console.log("searchTerm: "+ searchTerm)
     
     var pageLimit = 10
     var offset = Number(req.query.offset)
